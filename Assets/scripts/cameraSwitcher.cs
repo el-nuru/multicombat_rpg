@@ -12,8 +12,10 @@ public class CameraSwitcher : MonoBehaviour
     [Header("Input Actions")]
     [SerializeField] public InputActionAsset inputActions;
 
-    [Header("Game Manager")]
-    public GameManager gameManager;
+    // ...existing code...
+
+    [Header("Battle Flow Manager")]
+    public BattleFlowManager battleFlowManager;
 
     private InputAction[] camActions;
     private int currentIndex = 0;
@@ -35,8 +37,7 @@ public class CameraSwitcher : MonoBehaviour
         {
             turnActions[i].SetTimerVisibility(i == activeIndex);
         }
-        if (gameManager != null && activeIndex != -1)
-            gameManager.SetActiveIndex(activeIndex);
+    // ...existing code...
     }
 
     private void OnEnable()
@@ -62,7 +63,6 @@ public class CameraSwitcher : MonoBehaviour
         }
     }
 
-    // Show only the camera and timer at the given index
     public void ShowCamera(int index)
     {
         currentIndex = index;
@@ -71,21 +71,7 @@ public class CameraSwitcher : MonoBehaviour
             cameras[i].enabled = (i == index);
             turnActions[i].SetTimerVisibility(i == index);
         }
-        if (gameManager != null)
-            gameManager.SetActiveIndex(index);
-    }
-
-    // Proxy for Fight button
-    public void OnFightButtonPressed()
-    {
-        if (currentIndex >= 0 && currentIndex < turnActions.Length)
-            turnActions[currentIndex].OnFightButtonPressed();
-    }
-
-    // Proxy for Run button
-    public void OnRunButtonPressed()
-    {
-        if (currentIndex >= 0 && currentIndex < turnActions.Length)
-            turnActions[currentIndex].OnRunButtonPressed();
+        if (battleFlowManager != null)
+            battleFlowManager.SetActiveCameraIndex(index);
     }
 }
