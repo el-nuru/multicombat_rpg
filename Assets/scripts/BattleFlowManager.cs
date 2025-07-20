@@ -143,8 +143,16 @@ public class BattleFlowManager : MonoBehaviour
     // Call this when switching cameras
     public void SetActiveCameraIndex(int index)
     {
-        activeCameraIndex = Mathf.Clamp(index, 0, playerTimerBars.Length - 1);
-        UpdatePlayerSliderVisibility();
+        if (playerTimerBars != null && playerTimerBars.Length > 0)
+        {
+            activeCameraIndex = Mathf.Clamp(index, 0, playerTimerBars.Length - 1);
+            UpdatePlayerSliderVisibility();
+        }
+        else
+        {
+            Debug.LogError("playerTimerBars is null or empty. Cannot set active camera index.");
+            activeCameraIndex = 0; // Default to a safe value
+        }
     }
 
     private void UpdatePlayerSliderVisibility()
