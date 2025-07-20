@@ -34,10 +34,11 @@ public class BattleFlowManager : MonoBehaviour
         if (!timersActive) return;
 
         // Update elapsed time for all players/cameras
-        if (playerTimerBars != null && playerTimerBars.Length >= playerElapsed.Length)
-        {
-            for (int i = 0; i < playerElapsed.Length; i++)
-            {
+            if (playerTimerBars != null)
+                {
+                    int limit = Mathf.Min(playerTimerBars.Length, playerElapsed.Length);
+                    for (int i = 0; i < limit; i++)
+                    {
                 playerElapsed[i] += Time.deltaTime;
                 if (playerFillTimes[i] > 0)
                 {
