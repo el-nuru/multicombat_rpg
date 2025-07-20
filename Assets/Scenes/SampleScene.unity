@@ -191,19 +191,19 @@ MonoBehaviour:
   combatantSlots:
   - roomIndex: 0
     isEnemy: 0
-    combatant: {fileID: 1785324828}
+    combatant: {fileID: 603721581}
     timerBar: {fileID: 2001715131}
   - roomIndex: 1
     isEnemy: 0
-    combatant: {fileID: 1047824546}
+    combatant: {fileID: 1872503276}
     timerBar: {fileID: 1497089469}
   - roomIndex: 2
     isEnemy: 0
-    combatant: {fileID: 402574052}
+    combatant: {fileID: 657518546}
     timerBar: {fileID: 347685358}
   - roomIndex: 0
     isEnemy: 1
-    combatant: {fileID: 1911223128}
+    combatant: {fileID: 1922644284}
     timerBar: {fileID: 2131084727}
 --- !u!1 &121004613
 GameObject:
@@ -2083,8 +2083,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 75923856}
+        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
         m_MethodName: OnRunButtonPressed
         m_Mode: 1
         m_Arguments:
@@ -2831,8 +2831,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+      - m_Target: {fileID: 75923856}
+        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
         m_MethodName: OnFightButtonPressed
         m_Mode: 1
         m_Arguments:
