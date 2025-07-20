@@ -35,7 +35,16 @@ public class BattleFlowManager : MonoBehaviour
         {
             playerElapsed[i] += Time.deltaTime;
             if (playerTimerBars != null && playerTimerBars.Length > i)
-                playerTimerBars[i].value = Mathf.Clamp01(playerElapsed[i] / playerFillTimes[i]);
+            {
+                if (playerFillTimes[i] > 0)
+                {
+                    playerTimerBars[i].value = Mathf.Clamp01(playerElapsed[i] / playerFillTimes[i]);
+                }
+                else
+                {
+                    playerTimerBars[i].value = 0; // Default to 0 if fill time is invalid
+                }
+            }
         }
         enemyElapsed += Time.deltaTime;
         if (enemyTimerBar != null)
