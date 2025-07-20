@@ -50,7 +50,9 @@ public class BattleFlowManager : MonoBehaviour
         if (enemyTimerBar != null)
             enemyTimerBar.value = Mathf.Clamp01(enemyElapsed / enemyFillTime);
 
-        if (!playerCanAct && playerElapsed[activeCameraIndex] >= playerFillTimes[activeCameraIndex])
+        if (activeCameraIndex >= 0 && activeCameraIndex < playerElapsed.Length &&
+            activeCameraIndex < playerFillTimes.Length &&
+            !playerCanAct && playerElapsed[activeCameraIndex] >= playerFillTimes[activeCameraIndex])
         {
             playerCanAct = true;
             fightButton.interactable = true;
