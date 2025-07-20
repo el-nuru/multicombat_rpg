@@ -117,9 +117,16 @@ public class BattleFlowManager : MonoBehaviour
 
     private void ResetPlayerTimer()
     {
-        playerElapsed[activeCameraIndex] = 0f;
-        if (playerTimerBars != null && playerTimerBars.Length > activeCameraIndex)
-            playerTimerBars[activeCameraIndex].value = 0f;
+        if (playerElapsed != null && activeCameraIndex >= 0 && activeCameraIndex < playerElapsed.Length)
+        {
+            playerElapsed[activeCameraIndex] = 0f;
+            if (playerTimerBars != null && playerTimerBars.Length > activeCameraIndex)
+                playerTimerBars[activeCameraIndex].value = 0f;
+        }
+        else
+        {
+            Debug.LogError("Invalid activeCameraIndex or uninitialized playerElapsed array.");
+        }
         playerCanAct = false;
         timersActive = true;
         UpdatePlayerSliderVisibility();
