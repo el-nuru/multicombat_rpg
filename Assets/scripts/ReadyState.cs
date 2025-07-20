@@ -8,13 +8,11 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
 
         public void OnFight(TurnAction turn)
         {
-            turn.PrintFightMessage();
             turn.ChangeState(new WaitingState());
         }
 
         public void OnRun(TurnAction turn)
         {
-            turn.PrintRunMessage();
             turn.ChangeState(new WaitingState());
         }
 
