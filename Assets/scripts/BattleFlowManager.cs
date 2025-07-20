@@ -104,7 +104,7 @@ public class BattleFlowManager : MonoBehaviour
         timersActive = false;
         fightButton.interactable = false;
         runButton.interactable = false;
-        Invoke(nameof(ResetPlayerTimer), 0.5f); // Small delay before reset
+        Invoke(nameof(ResetPlayerTimer), RESET_DELAY); // Small delay before reset
     }
 
     private void AfterEnemyAction()
