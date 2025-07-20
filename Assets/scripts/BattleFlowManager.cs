@@ -14,6 +14,7 @@ public class BattleFlowManager : MonoBehaviour
 
     private float[] playerElapsed;
     private float enemyElapsed = 0f;
+    private float resetDelay = 0f;
     private bool playerCanAct = false;
     private bool timersActive = true;
     private int activeCameraIndex = 0;
@@ -21,6 +22,8 @@ public class BattleFlowManager : MonoBehaviour
     void Start()
     {
         playerElapsed = new float[playerTimerBars.Length];
+        fightButton.interactable = false;
+        runButton.interactable = false;
         ResetPlayerTimer();
         ResetEnemyTimer();
         UpdatePlayerSliderVisibility();
@@ -50,13 +53,22 @@ public class BattleFlowManager : MonoBehaviour
         if (enemyTimerBar != null)
             enemyTimerBar.value = Mathf.Clamp01(enemyElapsed / enemyFillTime);
 
+        // Check if the active player's timer is full and enable/disable buttons accordingly
         if (activeCameraIndex >= 0 && activeCameraIndex < playerElapsed.Length &&
-            activeCameraIndex < playerFillTimes.Length &&
-            !playerCanAct && playerElapsed[activeCameraIndex] >= playerFillTimes[activeCameraIndex])
+            activeCameraIndex < playerFillTimes.Length)
         {
-            playerCanAct = true;
-            fightButton.interactable = true;
-            runButton.interactable = true;
+            if (playerElapsed[activeCameraIndex] >= playerFillTimes[activeCameraIndex])
+            {
+                playerCanAct = true;
+                fightButton.interactable = true;
+                runButton.interactable = true;
+            }
+            else
+            {
+                playerCanAct = false;
+                fightButton.interactable = false;
+                runButton.interactable = false;
+            }
         }
 
         if (enemyElapsed >= enemyFillTime)
@@ -104,7 +116,7 @@ public class BattleFlowManager : MonoBehaviour
         timersActive = false;
         fightButton.interactable = false;
         runButton.interactable = false;
-        Invoke(nameof(ResetPlayerTimer), RESET_DELAY); // Small delay before reset
+        Invoke(nameof(ResetPlayerTimer), resetDelay); // Small delay before reset
     }
 
     private void AfterEnemyAction()
@@ -112,7 +124,7 @@ public class BattleFlowManager : MonoBehaviour
         timersActive = false;
         fightButton.interactable = false;
         runButton.interactable = false;
-        Invoke(nameof(ResetEnemyTimer), RESET_DELAY); // Small delay before reset
+        Invoke(nameof(ResetEnemyTimer), resetDelay); // Small delay before reset
     }
 
     private void ResetPlayerTimer()
@@ -130,6 +142,19 @@ public class BattleFlowManager : MonoBehaviour
         playerCanAct = false;
         timersActive = true;
         UpdatePlayerSliderVisibility();
+
+        // Re-enable buttons if timer is ready again
+        if (playerElapsed[activeCameraIndex] >= playerFillTimes[activeCameraIndex])
+        {
+            fightButton.interactable = true;
+            runButton.interactable = true;
+            playerCanAct = true;
+        }
+        else
+        {
+            fightButton.interactable = false;
+            runButton.interactable = false;
+        }
     }
 
     private void ResetEnemyTimer()
