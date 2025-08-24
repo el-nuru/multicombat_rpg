@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using c1a_proy.rpg.rpg.Assets.scripts;
 
 namespace c1a_proy.rpg.rpg.Assets.scripts
 {
-	public class Allied : MonoBehaviour, ICharacter
+	public class PlayerCharacter : MonoBehaviour, ICharacter
 	{
 		[SerializeField] private string _characterName;
 		[SerializeField] private int _maxHP;
@@ -15,6 +14,7 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
 		[SerializeField] private int power;
 		[SerializeField] public List<Skill> skills;
 		[SerializeField] private float fillTime;
+		[Header("Messages")]
 		[SerializeField] private string fightMessage;
 		[SerializeField] private string runMessage;
 		private float elapsedTime;
@@ -58,10 +58,5 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
 		public int Power => power;
 		public List<Skill> Skills => skills;
 
-
-		void Update()
-		{
-			ElapsedTime += Time.deltaTime;
-		}
 	}
 }

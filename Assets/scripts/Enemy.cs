@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using c1a_proy.rpg.rpg.Assets.scripts;
 
 namespace c1a_proy.rpg.rpg.Assets.scripts
@@ -16,7 +15,6 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
         [SerializeField] private int power;
         [SerializeField] public List<Skill> skills;
         [SerializeField] private float fillTime;
-        [SerializeField] private Slider timerBar;
         [SerializeField] private string fightMessage;
         [SerializeField] private string runMessage;
         private float elapsedTime;
@@ -42,9 +40,17 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
         }
 
         // Propiedades adicionales para compatibilidad con el resto del sistema
-        public float ElapsedTime { get => elapsedTime; set => elapsedTime = value; }
+        public event System.Action<float> OnElapsedTimeChanged;
+        public float ElapsedTime {
+            get => elapsedTime;
+            set {
+                if (elapsedTime != value) {
+                    elapsedTime = value;
+                    OnElapsedTimeChanged?.Invoke(elapsedTime);
+                }
+            }
+        }
         public float FillTime { get => fillTime; set => fillTime = value; }
-        public Slider TimerBar { get => timerBar; set => timerBar = value; }
         public bool IsEnemy => true;
         public string FightMessage { get => fightMessage; set => fightMessage = value; }
         public string RunMessage { get => runMessage; set => runMessage = value; }
@@ -61,8 +67,7 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
         void Update()
         {
             ElapsedTime += Time.deltaTime;
-            if (TimerBar != null && FillTime > 0)
-                TimerBar.value = Mathf.Clamp01(ElapsedTime / FillTime);
+            // Removed UI writes; CharacterUIBinder handles sliders
         }
     }
 }

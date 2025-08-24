@@ -4,10 +4,11 @@ using c1a_proy.rpg.rpg.Assets.scripts;
 
 public class BattleFlowManager : MonoBehaviour
 {
-    // Inspector-driven: asigna los combatientes y sus barras en el inspector
-    public Button fightButton;
-    public Button runButton;
-    public int activeCombatantIndex = 0;
+    public enum PlayerAction { Fight, Run }
+    [System.Serializable]
+    public struct RoomButtons { public Button fight; public Button run; }
+    [Header("Optional: Buttons por sala (index = room)")]
+    public RoomButtons[] roomButtons;
     public int activeRoomIndex = 0;
     public float resetDelay = 0f;
     public bool timersActive = true;
@@ -18,7 +19,6 @@ public class BattleFlowManager : MonoBehaviour
         public int roomIndex;
         public bool isEnemy;
         public MonoBehaviour combatant;
-        public Slider timerBar;
         public ICharacter Character => combatant as ICharacter;
     }
 
@@ -27,11 +27,8 @@ public class BattleFlowManager : MonoBehaviour
 
     void Start()
     {
-    activeRoomIndex = 0; // Ensure room 1 is always the starting room
-    fightButton.interactable = false;
-    runButton.interactable = false;
+    activeRoomIndex = 0;
     ResetActiveCombatantTimer();
-    UpdateCombatantSliderVisibility();
     }
 
     void Update()
@@ -44,78 +41,59 @@ public class BattleFlowManager : MonoBehaviour
             var character = slot.Character;
             if (character != null)
             {
-                if (slot.timerBar != null && character.FillTime > 0)
-                {
-                    slot.timerBar.value = Mathf.Clamp01(character.ElapsedTime / character.FillTime);
-                }
-                // Only check player readiness for slots in the current room
                 if (!slot.isEnemy && slot.roomIndex == activeRoomIndex && character.ElapsedTime >= character.FillTime)
                 {
                     anyPlayerReady = true;
                 }
-                // Enemy auto-attack and slider reset for each enemy independently
                 if (slot.isEnemy && character.ElapsedTime >= character.FillTime)
                 {
+                    // Imprimir mensaje de ataque del enemigo
+                    Debug.Log($"[ENEMY] {character.FightMessage} (room {slot.roomIndex}, slot {i})");
                     character.ElapsedTime = 0f;
-                    if (slot.timerBar != null)
-                        slot.timerBar.value = 0f;
-                    Debug.Log($"Enemy in room {slot.roomIndex} attacks!");
+                    // Actualizar slider del enemigo si tiene CharacterUIBinder
+                    var binder = (character as MonoBehaviour)?.GetComponent<CharacterUIBinder>();
+                    if (binder != null)
+                    {
+                        binder.RefreshAll();
+                    }
                 }
             }
         }
-        // Only enable buttons for current room
-        fightButton.interactable = anyPlayerReady;
-        runButton.interactable = anyPlayerReady;
+        if (roomButtons != null && roomButtons.Length > 0)
+        {
+            for (int r = 0; r < roomButtons.Length; r++)
+            {
+                var rb = roomButtons[r];
+                bool enable = (r == activeRoomIndex) && anyPlayerReady;
+                if (rb.fight) rb.fight.interactable = enable;
+                if (rb.run) rb.run.interactable = enable;
+            }
+        }
     }
 
     public void OnFightButtonPressed()
     {
-        // Find the player combatant for the current room
-        for (int i = 0; i < combatantSlots.Length; i++)
-        {
-            var slot = combatantSlots[i];
-            var character = slot.Character;
-            if (character != null && !slot.isEnemy && slot.roomIndex == activeRoomIndex && character.ElapsedTime >= character.FillTime)
-            {
-                string msg = character.FightMessage ?? $"FIGHT{i + 1}";
-                Debug.Log(msg);
-                // Reset only this timer
-                character.ElapsedTime = 0f;
-                if (slot.timerBar != null)
-                    slot.timerBar.value = 0f;
-                AfterCombatantAction();
-                break;
-            }
-        }
+    TryExecutePlayerActionInRoom(activeRoomIndex, PlayerAction.Fight);
     }
 
     public void OnRunButtonPressed()
     {
-        // Find the player combatant for the current room
-        for (int i = 0; i < combatantSlots.Length; i++)
-        {
-            var slot = combatantSlots[i];
-            var character = slot.Character;
-            if (character != null && !slot.isEnemy && slot.roomIndex == activeRoomIndex && character.ElapsedTime >= character.FillTime)
-            {
-                string msg = character.RunMessage ?? $"RUN{i + 1}";
-                Debug.Log(msg);
-                // Reset only this timer
-                character.ElapsedTime = 0f;
-                if (slot.timerBar != null)
-                    slot.timerBar.value = 0f;
-                AfterCombatantAction();
-                break;
-            }
-        }
+    TryExecutePlayerActionInRoom(activeRoomIndex, PlayerAction.Run);
     }
 
     private void AfterCombatantAction()
     {
-    timersActive = false;
-    fightButton.interactable = false;
-    runButton.interactable = false;
-    Invoke(nameof(ResetActiveCombatantTimer), resetDelay);
+        timersActive = false;
+        if (roomButtons != null && roomButtons.Length > 0)
+        {
+            for (int r = 0; r < roomButtons.Length; r++)
+            {
+                var rb = roomButtons[r];
+                if (rb.fight) rb.fight.interactable = false;
+                if (rb.run) rb.run.interactable = false;
+            }
+        }
+        Invoke(nameof(ResetActiveCombatantTimer), resetDelay);
     }
 
     private void ResetActiveCombatantTimer()
@@ -128,66 +106,37 @@ public class BattleFlowManager : MonoBehaviour
             if (character != null && !slot.isEnemy && slot.roomIndex == activeRoomIndex)
             {
                 character.ElapsedTime = 0f;
-                if (slot.timerBar != null)
-                    slot.timerBar.value = 0f;
+                // Forzar actualización del slider si hay CharacterUIBinder
+                var binder = (character as MonoBehaviour)?.GetComponent<CharacterUIBinder>();
+                if (binder != null)
+                {
+                    binder.RefreshAll();
+                }
             }
         }
         timersActive = true;
-        // Only update visibility for current room
-        UpdateCombatantSliderVisibility();
-        var actSlot = combatantSlots[activeCombatantIndex];
-        var actCharacter = actSlot.Character;
-        if (actCharacter != null && !actSlot.isEnemy && actSlot.roomIndex == activeRoomIndex && actCharacter.ElapsedTime >= actCharacter.FillTime)
+        if (roomButtons != null && roomButtons.Length > 0)
         {
-            fightButton.interactable = true;
-            runButton.interactable = true;
-        }
-        else
-        {
-            fightButton.interactable = false;
-            runButton.interactable = false;
-        }
-    }
-
-    public void SetActiveCombatantIndex(int index)
-    {
-        if (combatantSlots != null && combatantSlots.Length > 0)
-        {
-            activeCombatantIndex = Mathf.Clamp(index, 0, combatantSlots.Length - 1);
-            UpdateCombatantSliderVisibility();
-        }
-        else
-        {
-            Debug.LogError("combatantSlots is null or empty. Cannot set active combatant index.");
-            activeCombatantIndex = 0;
+            for (int r = 0; r < roomButtons.Length; r++)
+            {
+                var rb = roomButtons[r];
+                if (rb.fight) rb.fight.interactable = false;
+                if (rb.run) rb.run.interactable = false;
+            }
         }
     }
 
     public void SetActiveRoomIndex(int roomIndex)
     {
         activeRoomIndex = roomIndex;
-        UpdateCombatantSliderVisibility();
-    }
-
-    private void UpdateCombatantSliderVisibility()
-    {
-        for (int i = 0; i < combatantSlots.Length; i++)
-        {
-            var slot = combatantSlots[i];
-            bool show = slot.roomIndex == activeRoomIndex;
-            if (slot.timerBar != null)
-                slot.timerBar.gameObject.SetActive(show);
-        }
     }
 
     public void BeginBattle()
     {
-        // Inicializa el flujo de batalla aquí
     }
 
     public ICharacter GetRandomPlayer()
     {
-        // Example: return a random non-enemy character from combatantSlots
         var players = new System.Collections.Generic.List<ICharacter>();
         for (int i = 0; i < combatantSlots.Length; i++)
         {
@@ -199,9 +148,36 @@ public class BattleFlowManager : MonoBehaviour
         return players[Random.Range(0, players.Count)];
     }
 
-    public void EndEnemyTurn()
+    public bool IsAnyPlayerReadyInRoom(int roomIndex)
     {
-        // Implement logic to handle end of enemy turn here
-        // For example, advance to next combatant or reset timers
+        for (int i = 0; i < combatantSlots.Length; i++)
+        {
+            var slot = combatantSlots[i];
+            var character = slot.Character;
+            if (character != null && !slot.isEnemy && slot.roomIndex == roomIndex && character.ElapsedTime >= character.FillTime)
+                return true;
+        }
+        return false;
+    }
+
+    public bool TryExecutePlayerActionInRoom(int roomIndex, PlayerAction action)
+    {
+        for (int i = 0; i < combatantSlots.Length; i++)
+        {
+            var slot = combatantSlots[i];
+            var character = slot.Character;
+            if (character == null || slot.isEnemy || slot.roomIndex != roomIndex) continue;
+            if (character.ElapsedTime < character.FillTime) continue;
+
+            string actorName = string.IsNullOrEmpty(character.characterName) ? $"Player{i}" : character.characterName;
+            string verb = action == PlayerAction.Fight
+                ? (string.IsNullOrEmpty(character.FightMessage) ? "FIGHT" : character.FightMessage)
+                : (string.IsNullOrEmpty(character.RunMessage) ? "RUN" : character.RunMessage);
+            Debug.Log($"[{actorName}] {verb} (room {roomIndex}, slot {i})");
+            character.ElapsedTime = 0f;
+            AfterCombatantAction();
+            return true;
+        }
+        return false;
     }
 }
