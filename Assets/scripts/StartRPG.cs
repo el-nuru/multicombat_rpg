@@ -19,12 +19,23 @@ public class StartRPG : MonoBehaviour
             }
         }
 
-        // Disable NaniNovel camera
-        var naniCamera = Engine.GetService<ICameraManager>().Camera;
-        if (naniCamera != null)
+        // Disable NaniNovel cameras
+        var cameraManager = Engine.GetService<ICameraManager>();
+        if (cameraManager != null)
         {
-            naniCamera.enabled = false;
-            Debug.Log("NaniNovel camera disabled");
+            var naniCamera = cameraManager.Camera;
+            if (naniCamera != null)
+            {
+                naniCamera.enabled = false;
+                Debug.Log("NaniNovel main camera disabled");
+            }
+
+            var uiCamera = cameraManager.UICamera;
+            if (uiCamera != null)
+            {
+                uiCamera.enabled = false;
+                Debug.Log("NaniNovel UI camera disabled");
+            }
         }
 
         var roomsManager = FindFirstObjectByType<RoomsManager>();
@@ -51,15 +62,15 @@ public class StartRPG : MonoBehaviour
             Debug.LogError("BattleFlowManager not found!");
         }
 
-        // Re-enable Graphic Raycaster on battle canvas
+        // Enable canvas raycast blocking for battle
         var battleCanvas = GameObject.Find("Canvas");
         if (battleCanvas != null)
         {
-            var raycaster = battleCanvas.GetComponent<UnityEngine.UI.GraphicRaycaster>();
-            if (raycaster != null)
+            var canvasGroup = battleCanvas.GetComponent<CanvasGroup>();
+            if (canvasGroup != null)
             {
-                raycaster.enabled = true;
-                Debug.Log("Battle canvas Graphic Raycaster re-enabled");
+                canvasGroup.blocksRaycasts = true;
+                Debug.Log("Battle canvas raycast blocking enabled");
             }
         }
     }
