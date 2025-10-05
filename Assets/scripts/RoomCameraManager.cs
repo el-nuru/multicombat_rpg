@@ -18,7 +18,6 @@ public class RoomCameraManager : MonoBehaviour
             bool active = (i == currentRoomIndex);
             if (cam.gameObject.activeSelf != active)
                 cam.gameObject.SetActive(active);
-            cam.enabled = active;
             if (active && forceDisplay1)
             {
                 cam.targetDisplay = 0;

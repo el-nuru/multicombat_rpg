@@ -32,8 +32,7 @@ public class CameraSwitcher : MonoBehaviour
         {
             string actionName = $"ActivateCam{i + 1}";
             camActions[i] = cameraMap.FindAction(actionName);
-            int idx = i;
-            camActions[i].performed += ctx => ShowCamera(idx);
+            camActions[i].performed += ctx => ShowCamera(i);
             camActions[i].Enable();
         }
     }

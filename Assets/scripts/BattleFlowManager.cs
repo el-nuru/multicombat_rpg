@@ -1,17 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
 using c1a_proy.rpg.rpg.Assets.scripts;
+using System.Collections.Generic;
 
 public class BattleFlowManager : MonoBehaviour
 {
     public enum PlayerAction { Fight, Run }
-    [System.Serializable]
-    public struct RoomButtons { public Button fight; public Button run; }
-    [Header("Optional: Buttons por sala (index = room)")]
-    public RoomButtons[] roomButtons;
     public int activeRoomIndex = 0;
     public float resetDelay = 0f;
     public bool timersActive = true;
+
+    private Dictionary<MonoBehaviour, CharacterUIBinder> binderCache = new Dictionary<MonoBehaviour, CharacterUIBinder>();
 
     [System.Serializable]
     public struct CombatantSlot
@@ -25,10 +24,10 @@ public class BattleFlowManager : MonoBehaviour
     [Header("Combatant Slots")]
     public CombatantSlot[] combatantSlots;
 
-    void Start()
+    public void BeginBattle()
     {
-    activeRoomIndex = 0;
-    ResetActiveCombatantTimer();
+        activeRoomIndex = 0;
+        ResetActiveCombatantTimer();
     }
 
     void Update()
@@ -47,26 +46,24 @@ public class BattleFlowManager : MonoBehaviour
                 }
                 if (slot.isEnemy && character.ElapsedTime >= character.FillTime)
                 {
-                    // Imprimir mensaje de ataque del enemigo
+                    // Print enemy attack message
                     Debug.Log($"[ENEMY] {character.FightMessage} (room {slot.roomIndex}, slot {i})");
                     character.ElapsedTime = 0f;
-                    // Actualizar slider del enemigo si tiene CharacterUIBinder
-                    var binder = (character as MonoBehaviour)?.GetComponent<CharacterUIBinder>();
-                    if (binder != null)
+                    // Update enemy slider if CharacterUIBinder exists
+                    var characterMB = character as MonoBehaviour;
+                    if (characterMB != null)
                     {
-                        binder.RefreshAll();
+                        if (!binderCache.TryGetValue(characterMB, out var binder))
+                        {
+                            binder = characterMB.GetComponent<CharacterUIBinder>();
+                            binderCache[characterMB] = binder;
+                        }
+                        if (binder != null)
+                        {
+                            binder.RefreshAll();
+                        }
                     }
                 }
-            }
-        }
-        if (roomButtons != null && roomButtons.Length > 0)
-        {
-            for (int r = 0; r < roomButtons.Length; r++)
-            {
-                var rb = roomButtons[r];
-                bool enable = (r == activeRoomIndex) && anyPlayerReady;
-                if (rb.fight) rb.fight.interactable = enable;
-                if (rb.run) rb.run.interactable = enable;
             }
         }
     }
@@ -84,15 +81,6 @@ public class BattleFlowManager : MonoBehaviour
     private void AfterCombatantAction()
     {
         timersActive = false;
-        if (roomButtons != null && roomButtons.Length > 0)
-        {
-            for (int r = 0; r < roomButtons.Length; r++)
-            {
-                var rb = roomButtons[r];
-                if (rb.fight) rb.fight.interactable = false;
-                if (rb.run) rb.run.interactable = false;
-            }
-        }
         Invoke(nameof(ResetActiveCombatantTimer), resetDelay);
     }
 
@@ -106,24 +94,23 @@ public class BattleFlowManager : MonoBehaviour
             if (character != null && !slot.isEnemy && slot.roomIndex == activeRoomIndex)
             {
                 character.ElapsedTime = 0f;
-                // Forzar actualización del slider si hay CharacterUIBinder
-                var binder = (character as MonoBehaviour)?.GetComponent<CharacterUIBinder>();
-                if (binder != null)
+                // Force slider update if CharacterUIBinder exists
+                var characterMB = character as MonoBehaviour;
+                if (characterMB != null)
                 {
-                    binder.RefreshAll();
+                    if (!binderCache.TryGetValue(characterMB, out var binder))
+                    {
+                        binder = characterMB.GetComponent<CharacterUIBinder>();
+                        binderCache[characterMB] = binder;
+                    }
+                    if (binder != null)
+                    {
+                        binder.RefreshAll();
+                    }
                 }
             }
         }
         timersActive = true;
-        if (roomButtons != null && roomButtons.Length > 0)
-        {
-            for (int r = 0; r < roomButtons.Length; r++)
-            {
-                var rb = roomButtons[r];
-                if (rb.fight) rb.fight.interactable = false;
-                if (rb.run) rb.run.interactable = false;
-            }
-        }
     }
 
     public void SetActiveRoomIndex(int roomIndex)
@@ -131,9 +118,6 @@ public class BattleFlowManager : MonoBehaviour
         activeRoomIndex = roomIndex;
     }
 
-    public void BeginBattle()
-    {
-    }
 
     public ICharacter GetRandomPlayer()
     {

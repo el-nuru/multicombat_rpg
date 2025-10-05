@@ -45,7 +45,7 @@ public class RoomsManager : MonoBehaviour
 
 	private void Update()
 	{
-		// Atajos para cambiar de sala con teclas 1-9
+		// Shortcuts to change room with keys 1-9
 #if ENABLE_INPUT_SYSTEM
 		var kb = UnityEngine.InputSystem.Keyboard.current;
 		if (kb == null) return;

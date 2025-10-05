@@ -6,5 +6,5 @@ public class Skill
     public string skillName;
     public int damage;
     public float cooldown;
-    // Puedes agregar más propiedades según lo necesites
+    // Add more properties as needed
 }

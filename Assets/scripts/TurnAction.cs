@@ -9,7 +9,7 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
     {
         [Header("UI")] 
         public Slider timeBar; // Assign in inspector
-        [Header("Cámara asignada")]
+        [Header("Assigned Camera")]
         public Camera assignedCamera; // Assign the camera for this TurnAction in inspector
 
         private ITurnState currentState;
@@ -35,6 +35,6 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
                 timeBar.gameObject.SetActive(visible);
         }
 
-        // Puedes agregar más lógica aquí para manejar acciones específicas del turno
+        // Add more logic here to handle specific turn actions
     }
 }

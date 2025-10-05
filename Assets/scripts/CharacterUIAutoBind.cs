@@ -5,7 +5,7 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
     
     public class CharacterUIAutoBind : MonoBehaviour
     {
-        [Header("Referencia al personaje (debe implementar ICharacter)")]
+        [Header("Character reference (must implement ICharacter)")]
         [SerializeField] private MonoBehaviour characterBehaviour; 
         
         [SerializeField] private CharacterUIBinder binder;
