@@ -30,13 +30,15 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
 
         private void InitBattle()
         {
-            FindAnyObjectByType<RoomNavigator>()?.NavigateTo(0);
+            var nav = FindAnyObjectByType<RoomNavigator>();
+            if (nav == null) { Debug.LogError("[StartRPG] RoomNavigator not found."); return; }
+            nav.NavigateTo(0);
         }
 
         private void EnableBattleCanvas()
         {
             var canvas = GameObject.Find("Canvas");
-            if (canvas == null) return;
+            if (canvas == null) { Debug.LogError("[StartRPG] Canvas not found."); return; }
             var cg = canvas.GetComponent<CanvasGroup>();
             if (cg != null) cg.blocksRaycasts = true;
         }

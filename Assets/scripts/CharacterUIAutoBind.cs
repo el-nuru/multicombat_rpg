@@ -13,18 +13,8 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
         private void Awake()
         {
             if (!binder) binder = GetComponent<CharacterUIBinder>();
-            TryBind();
-        }
-
-        private void TryBind()
-        {
-            if (binder == null)
-            {
-                Debug.LogWarning($"[CharacterUIAutoBind] Can't find CharacterUIBinder on {name}");
-                return;
-            }
-            if (characterBehaviour is ICharacter c)
-                binder.Bind(c);
+            if (binder == null) { Debug.LogWarning($"[CharacterUIAutoBind] No CharacterUIBinder on {name}"); return; }
+            if (characterBehaviour is ICharacter c) binder.Bind(c);
             else if (characterBehaviour != null)
                 Debug.LogWarning($"[CharacterUIAutoBind] {characterBehaviour.name} doesn't implement ICharacter");
         }

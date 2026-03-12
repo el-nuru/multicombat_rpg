@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 namespace c1a_proy.rpg.rpg.Assets.scripts
@@ -11,19 +12,24 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
     {
         public int activeRoomIndex = 0;
 
-        private RoomBattleManager[] _rooms;
+        private Dictionary<int, RoomBattleManager> _roomMap;
 
         private void Start()
         {
-            _rooms = FindObjectsByType<RoomBattleManager>(FindObjectsInactive.Include);
+            foreach (var btn in FindObjectsByType<Button>(FindObjectsInactive.Include))
+            {
+                if (btn.name == "FightBtn") btn.onClick.AddListener(OnFightButtonPressed);
+                if (btn.name == "RunBtn")   btn.onClick.AddListener(OnRunButtonPressed);
+            }
+
+            var rooms = FindObjectsByType<RoomBattleManager>(FindObjectsInactive.Include);
+            _roomMap = new Dictionary<int, RoomBattleManager>();
+            foreach (var r in rooms)
+                _roomMap[r.RoomIndex] = r;
 
             var combatants = FindObjectsByType<Combatant>(FindObjectsInactive.Include);
-            var roomMap = new Dictionary<int, RoomBattleManager>();
-            foreach (var r in _rooms)
-                roomMap[r.RoomIndex] = r;
-
             foreach (var c in combatants)
-                if (roomMap.TryGetValue(c.RoomIndex, out var room))
+                if (_roomMap.TryGetValue(c.RoomIndex, out var room))
                     room.RegisterCombatant(c);
         }
 
@@ -32,14 +38,7 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
         public void OnFightButtonPressed() => ActiveRoom?.TryPlayerAction(PlayerAction.Fight);
         public void OnRunButtonPressed()  => ActiveRoom?.TryPlayerAction(PlayerAction.Run);
 
-        private RoomBattleManager ActiveRoom => GetRoom(activeRoomIndex);
-
-        private RoomBattleManager GetRoom(int index)
-        {
-            if (_rooms == null) return null;
-            foreach (var r in _rooms)
-                if (r.RoomIndex == index) return r;
-            return null;
-        }
+        private RoomBattleManager ActiveRoom =>
+            _roomMap != null && _roomMap.TryGetValue(activeRoomIndex, out var r) ? r : null;
     }
 }

@@ -29,3 +29,13 @@
 .vscode/
 # Docs
 docs/
+
+# Claude
+.claude/settings.local.json
+
+# Naninovel transient
+Assets/NaninovelData/.nani/Transient/
+
+# Unity recovery files
+Assets/_Recovery/
+Assets/_Recovery.meta

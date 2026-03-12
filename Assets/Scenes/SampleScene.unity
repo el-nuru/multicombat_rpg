@@ -152,19 +152,17 @@ Transform:
   - {fileID: 1257188461}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &75923856
+--- !u!114 &75923856 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 3300930523187083483, guid: 9662120bc4c9fb84eb3e20a46dca1b92, type: 3}
   m_PrefabInstance: {fileID: 8373381096043493337}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 384661493}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f8d7fc4b047e7d54183b59a90327c4dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleFlowManager
-  activeRoomIndex: 0
 --- !u!1 &99970971
 GameObject:
   m_ObjectHideFlags: 0
@@ -259,7 +257,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.392}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -507,7 +505,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -668,38 +666,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 358063454}
   m_CullTransparentMesh: 1
---- !u!1 &384661493
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 6873088676769952664, guid: 9662120bc4c9fb84eb3e20a46dca1b92, type: 3}
-  m_PrefabInstance: {fileID: 8373381096043493337}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 384661495}
-  - component: {fileID: 75923856}
-  m_Layer: 0
-  m_Name: BattleManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &384661495
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 6128787746503044348, guid: 9662120bc4c9fb84eb3e20a46dca1b92, type: 3}
-  m_PrefabInstance: {fileID: 8373381096043493337}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 384661493}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.57714, y: 7.33375, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &425574052
 GameObject:
   m_ObjectHideFlags: 0
@@ -987,6 +953,7 @@ GameObject:
   m_Component:
   - component: {fileID: 597130225}
   - component: {fileID: 597130226}
+  - component: {fileID: 597130227}
   m_Layer: 0
   m_Name: RoomManager
   m_TagString: Untagged
@@ -1030,6 +997,21 @@ MonoBehaviour:
     uiPanel: {fileID: 746181843}
   inputActions: {fileID: -944628639613478452, guid: 952822a5a175e2a4486488ccc2ad4162, type: 3}
   battleFlowManager: {fileID: 75923856}
+  bridge: {fileID: 597130227}
+--- !u!114 &597130227
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 597130224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb42238c739ed9b49ba0fcebe2ac7e81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::c1a_proy.rpg.rpg.Assets.scripts.NaninovelBridge
+  battleCanvas: {fileID: 1652520231}
+  roomNavigator: {fileID: 597130226}
 --- !u!1 &603721580
 GameObject:
   m_ObjectHideFlags: 0
@@ -1084,9 +1066,7 @@ MonoBehaviour:
   _defense: 5
   _power: 5
   _fillTime: 3
-  _fightMessage: FIGHT
   _runMessage: RUN
-  _skills: []
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -1352,7 +1332,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1431,7 +1411,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1549,7 +1529,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.392}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1927,36 +1907,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: c1a_proy.rpg.rpg.Assets.scripts.BattleFlowManager,
+          Assembly-CSharp
         m_MethodName: OnFightButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
-        m_MethodName: OnFightButtonPressed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
-        m_MethodName: OnFightButtonPressed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2534,36 +2491,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: c1a_proy.rpg.rpg.Assets.scripts.BattleFlowManager,
+          Assembly-CSharp
         m_MethodName: OnRunButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
-        m_MethodName: OnRunButtonPressed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
-        m_MethodName: OnRunButtonPressed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2891,36 +2825,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: c1a_proy.rpg.rpg.Assets.scripts.BattleFlowManager,
+          Assembly-CSharp
         m_MethodName: OnRunButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
-        m_MethodName: OnRunButtonPressed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
-        m_MethodName: OnRunButtonPressed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -3090,7 +3001,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.392}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3208,7 +3119,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.392}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -3377,9 +3288,7 @@ MonoBehaviour:
   _defense: 5
   _power: 5
   _fillTime: 3
-  _fightMessage: FIGHT
   _runMessage: RUN
-  _skills: []
 --- !u!1 &1553229858 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7227802611873562280, guid: 7a6f1efa3674477489321246966769c4, type: 3}
@@ -3751,7 +3660,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1652520226}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
   m_Name: 
@@ -3840,7 +3749,7 @@ CanvasGroup:
   m_Enabled: 1
   m_Alpha: 1
   m_Interactable: 1
-  m_BlocksRaycasts: 0
+  m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
 --- !u!1 &1658301701
 GameObject:
@@ -3926,36 +3835,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: c1a_proy.rpg.rpg.Assets.scripts.BattleFlowManager,
+          Assembly-CSharp
         m_MethodName: OnRunButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
-        m_MethodName: OnRunButtonPressed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
-        m_MethodName: OnRunButtonPressed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -4093,7 +3979,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.392}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -4657,9 +4543,7 @@ MonoBehaviour:
   _defense: 5
   _power: 5
   _fillTime: 4
-  _fightMessage: ENEMY FIGHT
   _runMessage: ENEMY RUN
-  _skills: []
 --- !u!1 &1855558559 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 7227802611873562280, guid: 7a6f1efa3674477489321246966769c4, type: 3}
@@ -4916,36 +4800,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: c1a_proy.rpg.rpg.Assets.scripts.BattleFlowManager,
+          Assembly-CSharp
         m_MethodName: OnFightButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
-        m_MethodName: OnFightButtonPressed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
-        m_MethodName: OnFightButtonPressed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -5043,9 +4904,7 @@ MonoBehaviour:
   _defense: 5
   _power: 5
   _fillTime: 4
-  _fightMessage: ENEMY FIGHT
   _runMessage: ENEMY RUN
-  _skills: []
 --- !u!1 &1931781701
 GameObject:
   m_ObjectHideFlags: 0
@@ -5130,36 +4989,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
+        m_TargetAssemblyTypeName: c1a_proy.rpg.rpg.Assets.scripts.BattleFlowManager,
+          Assembly-CSharp
         m_MethodName: OnFightButtonPressed
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
-        m_MethodName: OnFightButtonPressed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 75923856}
-        m_TargetAssemblyTypeName: BattleFlowManager, Assembly-CSharp
-        m_MethodName: OnFightButtonPressed
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -5509,7 +5345,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0.392}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -5753,18 +5589,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1825299801263491582, guid: 9662120bc4c9fb84eb3e20a46dca1b92, type: 3}
-      propertyPath: 'cameras.Array.data[0]'
-      value: 
-      objectReference: {fileID: 519420031}
-    - target: {fileID: 1825299801263491582, guid: 9662120bc4c9fb84eb3e20a46dca1b92, type: 3}
-      propertyPath: 'cameras.Array.data[1]'
-      value: 
-      objectReference: {fileID: 121004616}
-    - target: {fileID: 1825299801263491582, guid: 9662120bc4c9fb84eb3e20a46dca1b92, type: 3}
-      propertyPath: 'cameras.Array.data[2]'
-      value: 
-      objectReference: {fileID: 1257188460}
     - target: {fileID: 3300930523187083483, guid: 9662120bc4c9fb84eb3e20a46dca1b92, type: 3}
       propertyPath: combatantSlots.Array.data[2].isEnemy
       value: 1
@@ -5833,8 +5657,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: BattleManager
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1825299801263491582, guid: 9662120bc4c9fb84eb3e20a46dca1b92, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

@@ -14,6 +14,7 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
 
         private readonly List<Combatant> _combatants = new();
         private readonly Queue<ICombatCommand> _commandQueue = new();
+        private readonly List<Combatant> _queryBuffer = new();
 
         public void RegisterCombatant(Combatant c) => _combatants.Add(c);
 
@@ -62,10 +63,10 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
 
         private List<Combatant> GetLivingCombatants(bool isEnemy)
         {
-            var list = new List<Combatant>();
+            _queryBuffer.Clear();
             foreach (var c in _combatants)
-                if (c.IsEnemy == isEnemy && c.IsAlive()) list.Add(c);
-            return list;
+                if (c.IsEnemy == isEnemy && c.IsAlive()) _queryBuffer.Add(c);
+            return _queryBuffer;
         }
 
         private static Combatant PickRandom(List<Combatant> list) =>
