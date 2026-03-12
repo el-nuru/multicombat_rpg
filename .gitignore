@@ -30,6 +30,9 @@
 # Docs
 docs/
 
+# Claude
+.claude/settings.local.json
+
 # Unity recovery files
 Assets/_Recovery/
 Assets/_Recovery.meta
