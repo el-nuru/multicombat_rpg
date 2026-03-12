@@ -26,15 +26,18 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
 
         [Header("Dependencies")]
         [SerializeField] private BattleFlowManager battleFlowManager;
+        [SerializeField] private NaninovelBridge _bridge;
 
         public event Action<int> OnRoomChanged;
 
         private int _currentIndex;
         private InputAction[] _camActions;
+        private InputAction _cam0Action;
 
         private void OnEnable()
         {
-            var map = inputActions.FindActionMap("Camera");
+            var map = inputActions?.FindActionMap("Camera");
+            if (map == null) { Debug.LogError("[RoomNavigator] 'Camera' action map not found."); return; }
             _camActions = new InputAction[rooms.Length];
             for (int i = 0; i < rooms.Length; i++)
             {
@@ -47,6 +50,14 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
                     _camActions[i].Enable();
                 }
             }
+
+            var cam0 = map.FindAction("ActivateCam0");
+            if (cam0 != null)
+            {
+                _cam0Action = cam0;
+                _cam0Action.performed += _ => _bridge?.Toggle();
+                _cam0Action.Enable();
+            }
         }
 
         private void OnDisable()
@@ -54,6 +65,7 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
             if (_camActions == null) return;
             foreach (var a in _camActions)
                 a?.Disable();
+            _cam0Action?.Disable();
         }
 
         private void Start() => NavigateTo(0);
