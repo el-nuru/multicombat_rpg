@@ -2856,7 +2856,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6717729124837451898}
         m_TargetAssemblyTypeName: StartRPG, Assembly-CSharp
-        m_MethodName: Startrpg
+        m_MethodName: StartRPG_
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -1,27 +1,20 @@
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+namespace c1a_proy.rpg.rpg.Assets.scripts
 {
-    public static GameManager Instance { get; private set; }
-
-    [Header("Gestores principales")]
-    public BattleFlowManager battleFlowManager;
-    public RoomCameraManager roomCameraManager;
-
-    private void Awake()
+    public class GameManager : MonoBehaviour
     {
-        if (Instance != null && Instance != this)
+        public static GameManager Instance { get; private set; }
+
+        private void Awake()
         {
-            Destroy(gameObject);
-            return;
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
-        Instance = this;
-        DontDestroyOnLoad(gameObject);
-    }
-
-    public void StartBattle()
-    {
-        if (battleFlowManager != null)
-            battleFlowManager.BeginBattle();
     }
 }
