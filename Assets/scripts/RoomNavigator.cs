@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 
 namespace c1a_proy.rpg.rpg.Assets.scripts
 {
@@ -26,45 +27,59 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
 
         [Header("Dependencies")]
         [SerializeField] private BattleFlowManager battleFlowManager;
-        [SerializeField] private NaninovelBridge _bridge;
+        [FormerlySerializedAs("_bridge")]
+        [SerializeField] private NaninovelBridge bridge;
 
         public event Action<int> OnRoomChanged;
 
         private int _currentIndex;
         private InputAction[] _camActions;
+        private Action<InputAction.CallbackContext>[] _camCallbacks;
         private InputAction _cam0Action;
+        private Action<InputAction.CallbackContext> _cam0Callback;
 
         private void OnEnable()
         {
             var map = inputActions?.FindActionMap("Camera");
             if (map == null) { Debug.LogError("[RoomNavigator] 'Camera' action map not found."); return; }
-            _camActions = new InputAction[rooms.Length];
+
+            _camActions   = new InputAction[rooms.Length];
+            _camCallbacks = new Action<InputAction.CallbackContext>[rooms.Length];
             for (int i = 0; i < rooms.Length; i++)
             {
                 int captured = i;
-                string actionName = $"ActivateCam{i + 1}";
-                _camActions[i] = map.FindAction(actionName);
+                _camActions[i] = map.FindAction($"ActivateCam{i + 1}");
                 if (_camActions[i] != null)
                 {
-                    _camActions[i].performed += _ => NavigateTo(captured);
+                    _camCallbacks[i] = _ => NavigateTo(captured);
+                    _camActions[i].performed += _camCallbacks[i];
                     _camActions[i].Enable();
                 }
             }
 
-            var cam0 = map.FindAction("ActivateCam0");
-            if (cam0 != null)
+            _cam0Action = map.FindAction("ActivateCam0");
+            if (_cam0Action != null)
             {
-                _cam0Action = cam0;
-                _cam0Action.performed += _ => _bridge?.Toggle();
+                _cam0Callback = _ => bridge?.Toggle();
+                _cam0Action.performed += _cam0Callback;
                 _cam0Action.Enable();
             }
         }
 
         private void OnDisable()
         {
-            if (_camActions == null) return;
-            foreach (var a in _camActions)
-                a?.Disable();
+            if (_camActions != null)
+            {
+                for (int i = 0; i < _camActions.Length; i++)
+                {
+                    if (_camActions[i] != null && _camCallbacks[i] != null)
+                        _camActions[i].performed -= _camCallbacks[i];
+                    _camActions[i]?.Disable();
+                }
+            }
+
+            if (_cam0Action != null && _cam0Callback != null)
+                _cam0Action.performed -= _cam0Callback;
             _cam0Action?.Disable();
         }
 

@@ -25,9 +25,17 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
         private async void LoadScript()
         {
             Engine.OnInitializationFinished -= LoadScript;
-            var scripts = Engine.GetService<IScriptManager>();
-            await scripts.ScriptLoader.LoadOrErr("Main", this);
-            _scriptLoaded = true;
+            try
+            {
+                var scripts = Engine.GetService<IScriptManager>();
+                if (scripts == null) { Debug.LogError("[NaninovelBridge] IScriptManager not found."); return; }
+                await scripts.ScriptLoader.LoadOrErr("Main", this);
+                _scriptLoaded = true;
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"[NaninovelBridge] Failed to load script 'Main': {e.Message}");
+            }
         }
 
         public void Toggle()
@@ -39,21 +47,27 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
 
         private void EnterVN()
         {
+            if (battleCanvas == null) { Debug.LogError("[NaninovelBridge] battleCanvas not assigned."); return; }
             var cam = Engine.GetService<ICameraManager>();
             if (cam == null) { Debug.LogError("[NaninovelBridge] ICameraManager not found."); return; }
+            var player = Engine.GetService<IScriptPlayer>();
+            if (player == null) { Debug.LogError("[NaninovelBridge] IScriptPlayer not found."); return; }
+
             _inVN = true;
             cam.Camera.enabled = true;
             if (cam.UICamera != null) cam.UICamera.enabled = true;
             battleCanvas.alpha = 0f;
             battleCanvas.blocksRaycasts = false;
 
-            Engine.GetService<IScriptPlayer>().Play("Main");
+            player.Play("Main");
         }
 
         private void ExitVN()
         {
+            if (battleCanvas == null) { Debug.LogError("[NaninovelBridge] battleCanvas not assigned."); return; }
             var cam = Engine.GetService<ICameraManager>();
             if (cam == null) { Debug.LogError("[NaninovelBridge] ICameraManager not found."); return; }
+
             _inVN = false;
             cam.Camera.enabled = false;
             if (cam.UICamera != null) cam.UICamera.enabled = false;

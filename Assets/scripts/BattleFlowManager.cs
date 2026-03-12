@@ -35,18 +35,8 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
 
         public void SetActiveRoomIndex(int index) => activeRoomIndex = index;
 
-        public void OnFightButtonPressed()
-        {
-            Debug.Log($"[BFM] Fight pressed. ActiveRoom={ActiveRoom}, rooms={_roomMap?.Count}, activeIdx={activeRoomIndex}");
-            var ready = ActiveRoom?.IsAnyAllyReady();
-            Debug.Log($"[BFM] AnyAllyReady={ready}");
-            ActiveRoom?.TryPlayerAction(PlayerAction.Fight);
-        }
-        public void OnRunButtonPressed()
-        {
-            Debug.Log($"[BFM] Run pressed. ActiveRoom={ActiveRoom}");
-            ActiveRoom?.TryPlayerAction(PlayerAction.Run);
-        }
+        public void OnFightButtonPressed() => ActiveRoom?.TryPlayerAction(PlayerAction.Fight);
+        public void OnRunButtonPressed()  => ActiveRoom?.TryPlayerAction(PlayerAction.Run);
 
         private RoomBattleManager ActiveRoom =>
             _roomMap != null && _roomMap.TryGetValue(activeRoomIndex, out var r) ? r : null;

@@ -997,7 +997,7 @@ MonoBehaviour:
     uiPanel: {fileID: 746181843}
   inputActions: {fileID: -944628639613478452, guid: 952822a5a175e2a4486488ccc2ad4162, type: 3}
   battleFlowManager: {fileID: 75923856}
-  _bridge: {fileID: 597130227}
+  bridge: {fileID: 597130227}
 --- !u!114 &597130227
 MonoBehaviour:
   m_ObjectHideFlags: 0
