@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/zolut/AppData/Roaming/Claude/**)",
+      "Read(//c/Users/zolut/**)",
+      "Bash(python3 -c \":*)",
+      "Bash(node -e \":*)",
+      "Bash(curl -s http://127.0.0.1:8080/mcp)",
+      "Bash(curl -s -H \"Accept: text/event-stream\" http://127.0.0.1:8080/mcp)",
+      "Bash(curl -v -H \"Accept: text/event-stream\" -H \"Content-Type: application/json\" -X POST http://127.0.0.1:8080/mcp -d '{\"\"\"\"jsonrpc\"\"\"\":\"\"\"\"2.0\"\"\"\",\"\"\"\"method\"\"\"\":\"\"\"\"initialize\"\"\"\",\"\"\"\"id\"\"\"\":1,\"\"\"\"params\"\"\"\":{\"\"\"\"protocolVersion\"\"\"\":\"\"\"\"2024-11-05\"\"\"\",\"\"\"\"capabilities\"\"\"\":{},\"\"\"\"clientInfo\"\"\"\":{\"\"\"\"name\"\"\"\":\"\"\"\"test\"\"\"\",\"\"\"\"version\"\"\"\":\"\"\"\"1.0\"\"\"\"}}}')",
+      "Bash(curl -s -X POST \"http://127.0.0.1:8080/mcp\" -H \"Content-Type: application/json\" -d '{\"\"jsonrpc\"\":\"\"2.0\"\",\"\"method\"\":\"\"initialize\"\",\"\"params\"\":{\"\"protocolVersion\"\":\"\"2024-11-05\"\",\"\"capabilities\"\":{},\"\"clientInfo\"\":{\"\"name\"\":\"\"test\"\",\"\"version\"\":\"\"1.0\"\"}},\"\"id\"\":1}')",
+      "Bash(curl -s -X POST \"http://127.0.0.1:8080/mcp\" -H \"Content-Type: application/json\" -H \"Accept: application/json, text/event-stream\" -d '{\"\"jsonrpc\"\":\"\"2.0\"\",\"\"method\"\":\"\"initialize\"\",\"\"params\"\":{\"\"protocolVersion\"\":\"\"2024-11-05\"\",\"\"capabilities\"\":{},\"\"clientInfo\"\":{\"\"name\"\":\"\"test\"\",\"\"version\"\":\"\"1.0\"\"}},\"\"id\"\":1}')",
+      "Bash(node -e \"const d=require\\(''''/dev/stdin''''\\);console.log\\(JSON.stringify\\(d.mcpServers,null,2\\)\\)\")",
+      "Bash(node -e \"const d=require\\(''C:/Users/zolut/.claude/settings.json''\\);console.log\\(JSON.stringify\\(d.mcpServers,null,2\\)\\)\")",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(find c:/1a_proy/rpg/rpg -path */unity-mcp* -name *.json)",
+      "mcp__UnityMCP__find_gameobjects",
+      "mcp__UnityMCP__read_console",
+      "mcp__UnityMCP__manage_gameobject",
+      "WebSearch",
+      "Bash(cd \"C:/1a_proy/rpg/rpg/Assets/scripts\" && rm -f Enemy.cs Enemy.cs.meta EnemyTurn.cs EnemyTurn.cs.meta TurnAction.cs TurnAction.cs.meta ReadyState.cs ReadyState.cs.meta WaitingState.cs WaitingState.cs.meta PlayerCharacter.cs PlayerCharacter.cs.meta Allied.cs Allied.cs.meta EnemyCharacter.cs EnemyCharacter.cs.meta ITurnState.cs ITurnState.cs.meta && echo \"done\")",
+      "mcp__UnityMCP__refresh_unity",
+      "mcp__UnityMCP__manage_scene",
+      "mcp__UnityMCP__manage_components",
+      "mcp__UnityMCP__manage_editor",
+      "mcp__UnityMCP__execute_menu_item",
+      "Bash(cd \"C:/1a_proy/rpg/rpg/Assets/scripts\" && rm -f cameraSwitcher.cs cameraSwitcher.cs.meta RoomsManager.cs RoomsManager.cs.meta RoomCameraManager.cs RoomCameraManager.cs.meta && echo \"done\")",
+      "mcp__UnityMCP__manage_asset",
+      "Bash(grep -rn \"Startrpg\\\\|StartRPG\" \"C:/1a_proy/rpg/rpg/Assets/\" --include=\"*.nani\" 2>/dev/null; grep -rn \"Startrpg\\\\|StartRPG\" \"C:/1a_proy/rpg/rpg/Assets/\" --include=\"*.unity\" 2>/dev/null | head -10)",
+      "Bash(echo \"\" >> \"C:/1a_proy/rpg/rpg/.gitignore\" && echo \"# Docs\" >> \"C:/1a_proy/rpg/rpg/.gitignore\" && echo \"docs/\" >> \"C:/1a_proy/rpg/rpg/.gitignore\")"
+    ],
+    "additionalDirectories": [
+      "C:\\Users\\zolut"
+    ]
+  }
+}

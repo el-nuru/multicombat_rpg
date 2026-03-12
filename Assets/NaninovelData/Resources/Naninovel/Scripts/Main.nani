@@ -1,0 +1,12 @@
+; Este es el script principal que se ejecuta al iniciar un nuevo juego
+; Aquí puedes poner tu diálogo inicial
+
+Bienvenido al juego![wait 1]
+¿Estás listo para comenzar tu aventura?[wait 2]
+¡Empecemos![wait 1]
+
+@goto GameStart
+
+# GameStart
+; Aquí puedes llamar a tu sistema RPG o continuar con más diálogo
+@stop

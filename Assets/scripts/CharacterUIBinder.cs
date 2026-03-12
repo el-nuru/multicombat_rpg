@@ -5,101 +5,64 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
 {
     public class CharacterUIBinder : MonoBehaviour
     {
+        private const float MinFillTime = 0.0001f;
+
         [Header("Sliders")]
         [SerializeField] private Slider hpSlider;
         [SerializeField] private Slider actionSlider;
 
-        private ICharacter bound;
-        private void OnEnable()
-        {
-            if (bound != null)
-                bound.OnElapsedTimeChanged += OnElapsedTimeChanged;
-        }
-        private void OnDisable()
-        {
-            if (bound != null)
-                bound.OnElapsedTimeChanged -= OnElapsedTimeChanged;
-        }
-        private void OnElapsedTimeChanged(float newValue)
-        {
-            if (actionSlider != null)
-            {
-                float fill = Mathf.Max(0.0001f, bound.FillTime);
-                actionSlider.value = Mathf.Clamp01(newValue / fill);
-            }
-        }
+        private ICharacter _bound;
+
+        private void OnEnable()  => Subscribe(_bound);
+        private void OnDisable() => Unsubscribe(_bound);
+
+        private void Awake() => ConfigureSliders();
 
         public void Bind(ICharacter character)
         {
-            if (bound != null)
-                bound.OnElapsedTimeChanged -= OnElapsedTimeChanged;
-            bound = character;
-            if (bound != null)
-                bound.OnElapsedTimeChanged += OnElapsedTimeChanged;
-            InitSliders();
+            Unsubscribe(_bound);
+            _bound = character;
+            Subscribe(_bound);
             RefreshAll();
         }
 
-        public void Unbind()
+        private void Subscribe(ICharacter c)   { if (c != null) c.OnElapsedTimeChanged += OnElapsedTimeChanged; }
+        private void Unsubscribe(ICharacter c) { if (c != null) c.OnElapsedTimeChanged -= OnElapsedTimeChanged; }
+
+        public void RefreshAll()
         {
-            bound = null;
+            if (_bound == null) return;
+            ConfigureSliders();
+            UpdateHP();
+            UpdateActionBar(_bound.ElapsedTime);
         }
 
-        private void Awake()
-        {
-            InitSliders();
-        }
+        private void OnElapsedTimeChanged(float newValue) => UpdateActionBar(newValue);
 
-        private void Update()
+        private void UpdateHP()
         {
-            if (bound == null) return;
-
             if (hpSlider != null)
-            {
-                hpSlider.wholeNumbers = true;
-                hpSlider.minValue = 0f;
-                hpSlider.maxValue = Mathf.Max(1, bound.maxHP);
-                hpSlider.value = Mathf.Clamp(bound.currentHP, 0, bound.maxHP);
-            }
-
-            if (actionSlider != null)
-            {
-                float fill = Mathf.Max(0.0001f, bound.FillTime);
-                actionSlider.minValue = 0f;
-                actionSlider.maxValue = 1f;
-                actionSlider.value = Mathf.Clamp01(bound.ElapsedTime / fill);
-            }
+                hpSlider.value = Mathf.Clamp(_bound.CurrentHP, 0, _bound.MaxHP);
         }
 
-        private void InitSliders()
+        private void UpdateActionBar(float elapsed)
+        {
+            if (actionSlider != null)
+                actionSlider.value = Mathf.Clamp01(elapsed / Mathf.Max(MinFillTime, _bound.FillTime));
+        }
+
+        private void ConfigureSliders()
         {
             if (hpSlider != null)
             {
                 hpSlider.wholeNumbers = true;
                 hpSlider.minValue = 0f;
-                hpSlider.maxValue = 1f;
-                hpSlider.value = 1f;
+                hpSlider.maxValue = _bound != null ? Mathf.Max(1, _bound.MaxHP) : 1f;
             }
             if (actionSlider != null)
             {
                 actionSlider.minValue = 0f;
                 actionSlider.maxValue = 1f;
-                actionSlider.value = 0f;
-            }
-        }
-
-    public void RefreshAll()
-        {
-            if (bound == null) return;
-            if (hpSlider != null)
-            {
-                hpSlider.maxValue = Mathf.Max(1, bound.maxHP);
-                hpSlider.value = Mathf.Clamp(bound.currentHP, 0, bound.maxHP);
-            }
-            if (actionSlider != null)
-            {
-                float fill = Mathf.Max(0.0001f, bound.FillTime);
-                actionSlider.value = Mathf.Clamp01(bound.ElapsedTime / fill);
             }
         }
     }
