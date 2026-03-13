@@ -11,12 +11,16 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
         [SerializeField] private Slider hpSlider;
         [SerializeField] private Slider actionSlider;
 
+        [Header("Combatant indicator")]
+        [SerializeField] private Color combatantColor = Color.white;
+
         private ICharacter _bound;
+        private Image _colorIndicator;
 
         private void OnEnable()  => Subscribe(_bound);
         private void OnDisable() => Unsubscribe(_bound);
 
-        private void Awake() => ConfigureSliders();
+        private void Awake() { ConfigureSliders(); EnsureIndicator(); }
 
         public void Bind(ICharacter character)
         {
@@ -24,6 +28,32 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
             _bound = character;
             Subscribe(_bound);
             RefreshAll();
+        }
+
+        public void SetColor(Color color)
+        {
+            combatantColor = color;
+            EnsureIndicator();
+        }
+
+        private void EnsureIndicator()
+        {
+            if (actionSlider == null) return;
+            if (_colorIndicator == null)
+            {
+                var go = new GameObject("CombatantColor", typeof(RectTransform), typeof(Image));
+                go.transform.SetParent(actionSlider.transform, false);
+                var rt = go.GetComponent<RectTransform>();
+                rt.anchorMin = new Vector2(0, 0.5f);
+                rt.anchorMax = new Vector2(0, 0.5f);
+                rt.pivot     = new Vector2(1, 0.5f);
+                rt.anchoredPosition = Vector2.zero;
+                var h = actionSlider.GetComponent<RectTransform>().rect.height;
+                rt.sizeDelta = new Vector2(h, h);
+                _colorIndicator = go.GetComponent<Image>();
+                _colorIndicator.raycastTarget = false;
+            }
+            _colorIndicator.color = combatantColor;
         }
 
         private void Subscribe(ICharacter c)   { if (c != null) c.OnElapsedTimeChanged += OnElapsedTimeChanged; }

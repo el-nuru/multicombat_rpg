@@ -8,6 +8,8 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
         [SerializeField] private MonoBehaviour characterBehaviour;
         [SerializeField] private CharacterUIBinder binder;
 
+        public MonoBehaviour GetCharacterBehaviour() => characterBehaviour;
+
         private void Reset() => binder = GetComponent<CharacterUIBinder>();
 
         private void Awake()

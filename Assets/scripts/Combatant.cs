@@ -73,6 +73,7 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
         }
 
         public bool IsAlive() => _currentHP > 0;
+        public void SetRoomIndex(int index) => _roomIndex = index;
 
         private void Update()
         {

@@ -17,6 +17,7 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
         private readonly List<Combatant> _queryBuffer = new();
 
         public void RegisterCombatant(Combatant c) => _combatants.Add(c);
+        public void UnregisterCombatant(Combatant c) => _combatants.Remove(c);
 
         private void Update()
         {
@@ -53,6 +54,7 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
         }
 
         public bool IsAnyAllyReady() => GetReadyAlly() != null;
+        public bool HasAlly() { foreach (var c in _combatants) if (!c.IsEnemy && c.IsAlive()) return true; return false; }
 
         private Combatant GetReadyAlly()
         {

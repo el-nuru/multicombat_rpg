@@ -35,6 +35,15 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
 
         public void SetActiveRoomIndex(int index) => activeRoomIndex = index;
 
+        public void MoveToRoom(Combatant combatant, int targetRoom)
+        {
+            if (!_roomMap.TryGetValue(combatant.RoomIndex, out var src)) src = null;
+            src?.UnregisterCombatant(combatant);
+            combatant.SetRoomIndex(targetRoom);
+            if (_roomMap.TryGetValue(targetRoom, out var dst))
+                dst.RegisterCombatant(combatant);
+        }
+
         public void OnFightButtonPressed() => ActiveRoom?.TryPlayerAction(PlayerAction.Fight);
         public void OnRunButtonPressed()  => ActiveRoom?.TryPlayerAction(PlayerAction.Run);
 

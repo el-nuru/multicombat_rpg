@@ -74,7 +74,7 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
             battleCanvas.alpha = 1f;
             battleCanvas.blocksRaycasts = true;
 
-            roomNavigator?.NavigateTo(roomNavigator.CurrentRoomIndex);
+            if (roomNavigator != null) roomNavigator.NavigateTo(roomNavigator.CurrentRoomIndex);
         }
     }
 }
