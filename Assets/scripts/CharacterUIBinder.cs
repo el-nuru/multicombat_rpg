@@ -30,12 +30,6 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
             RefreshAll();
         }
 
-        public void SetColor(Color color)
-        {
-            combatantColor = color;
-            EnsureIndicator();
-        }
-
         private void EnsureIndicator()
         {
             if (actionSlider == null) return;

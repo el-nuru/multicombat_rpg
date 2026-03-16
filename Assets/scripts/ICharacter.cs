@@ -8,9 +8,8 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
         int Speed { get; }
         int Strength { get; }
         int Defense { get; }
-        int Power { get; }
         bool IsEnemy { get; }
-        float FillTime { get; set; }
+        float FillTime { get; }
         float ElapsedTime { get; set; }
         string RunMessage { get; }
         event System.Action<float> OnElapsedTimeChanged;

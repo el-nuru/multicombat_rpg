@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using UnityEngine;
+using UnityEngine; // MonoBehaviour, SerializeField
 
 namespace c1a_proy.rpg.rpg.Assets.scripts
 {
@@ -12,18 +12,35 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
         [SerializeField] private int _roomIndex;
         public int RoomIndex => _roomIndex;
 
-        private readonly List<Combatant> _combatants = new();
+        private readonly List<Combatant>       _combatants   = new();
         private readonly Queue<ICombatCommand> _commandQueue = new();
-        private readonly List<Combatant> _queryBuffer = new();
+        private readonly List<Combatant>       _queryBuffer  = new();
+        private readonly StateMachine          _fsm          = new();
 
-        public void RegisterCombatant(Combatant c) => _combatants.Add(c);
+        private void Awake() => _fsm.ChangeState(new CombatActiveState(this));
+
+        public void RegisterCombatant(Combatant c)   => _combatants.Add(c);
         public void UnregisterCombatant(Combatant c) => _combatants.Remove(c);
 
-        private void Update()
+        private void Update() => _fsm.Update();
+
+        // Llamado por CombatActiveState cada frame
+        public void ProcessTick()
         {
             ProcessEnemyTurns();
+
             if (_commandQueue.Count > 0)
                 _commandQueue.Dequeue().Execute();
+
+            CheckTransitions();
+        }
+
+        private void CheckTransitions()
+        {
+            if (!HasLivingCombatants(isEnemy: false))
+                _fsm.ChangeState(new CombatDefeatState(this));
+            else if (!HasLivingCombatants(isEnemy: true))
+                _fsm.ChangeState(new CombatVictoryState(this));
         }
 
         private void ProcessEnemyTurns()
@@ -33,7 +50,8 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
                 if (!c.IsEnemy || c.ElapsedTime < c.FillTime) continue;
                 var targets = GetLivingCombatants(isEnemy: false);
                 if (targets.Count == 0) continue;
-                _commandQueue.Enqueue(new AttackCommand(c, PickRandom(targets)));
+                var cmd = c.Strategy.DecideAction(c, targets);
+                if (cmd != null) _commandQueue.Enqueue(cmd);
                 c.ElapsedTime = 0f;
             }
         }
@@ -46,9 +64,9 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
             if (actor == null || actor.IsEnemy || !actor.IsAlive() || actor.ElapsedTime < actor.FillTime)
                 return false;
 
-            var target = GetLivingCombatants(isEnemy: true);
-            ICombatCommand cmd = action == PlayerAction.Fight && target.Count > 0
-                ? new AttackCommand(actor, PickRandom(target))
+            var targets = GetLivingCombatants(isEnemy: true);
+            ICombatCommand cmd = action == PlayerAction.Fight && targets.Count > 0
+                ? new AttackCommand(actor, targets[Random.Range(0, targets.Count)])
                 : new RunCommand(actor);
 
             _commandQueue.Enqueue(cmd);
@@ -56,14 +74,18 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
             return true;
         }
 
-        public bool IsAnyAllyReady() => GetReadyAlly() != null;
-        public bool HasAlly() { foreach (var c in _combatants) if (!c.IsEnemy && c.IsAlive()) return true; return false; }
-
         private Combatant GetReadyAlly()
         {
             foreach (var c in _combatants)
                 if (!c.IsEnemy && c.IsAlive() && c.ElapsedTime >= c.FillTime) return c;
             return null;
+        }
+
+        private bool HasLivingCombatants(bool isEnemy)
+        {
+            foreach (var c in _combatants)
+                if (c.IsEnemy == isEnemy && c.IsAlive()) return true;
+            return false;
         }
 
         private List<Combatant> GetLivingCombatants(bool isEnemy)
@@ -73,9 +95,6 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
                 if (c.IsEnemy == isEnemy && c.IsAlive()) _queryBuffer.Add(c);
             return _queryBuffer;
         }
-
-        private static Combatant PickRandom(List<Combatant> list) =>
-            list[Random.Range(0, list.Count)];
     }
 
     public enum PlayerAction { Fight, Run }

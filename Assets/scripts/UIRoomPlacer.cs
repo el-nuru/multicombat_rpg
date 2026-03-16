@@ -1,59 +1,41 @@
 using UnityEngine;
-using System.Collections.Generic;
+using Object = UnityEngine.Object;
 
 namespace c1a_proy.rpg.rpg.Assets.scripts
 {
-    /// <summary>
-    /// At Start, moves every CharacterUI to the AllyUI matching its combatant's RoomIndex.
-    /// </summary>
     public class UIRoomPlacer : MonoBehaviour
     {
         private void Start()
         {
             var canvas = GetComponentInParent<Canvas>()?.transform
                       ?? FindAnyObjectByType<Canvas>()?.transform;
-            if (canvas == null) return;
+            if (canvas == null) { Debug.LogError("[UIRoomPlacer] canvas null"); return; }
 
-            // Build AllyUI map: roomIndex -> AllyUI transform
-            var allyUIMap = new Dictionary<int, Transform>();
-            int i = 1;
-            while (true)
+            var allyUIPerRoom = SceneQueries.FindAllyUIPerRoom(canvas);
+            var allies        = SceneQueries.FindAllAllies();
+
+            var binders = Object.FindObjectsByType<CharacterUIBinder>(FindObjectsInactive.Include);
+            foreach (var b in binders)
+                b.gameObject.SetActive(false);
+
+            foreach (var combatant in allies)
             {
-                var panel = canvas.Find($"PanelRoom{i}");
-                if (panel == null) break;
-                var ally = panel.Find("AllyUI");
-                if (ally != null) allyUIMap[i - 1] = ally;
-                i++;
-            }
+                int room = combatant.RoomIndex;
+                var ui = SceneQueries.FindCharacterUI(combatant);
+                if (room < 0 || room >= allyUIPerRoom.Length || allyUIPerRoom[room] == null) continue;
+                if (ui == null) continue;
 
-            // Collect all non-enemy combatants sorted by RoomIndex then by combatant order
-            var all = FindObjectsByType<Combatant>(FindObjectsInactive.Include);
-            System.Array.Sort(all, (a, b) => a.RoomIndex.CompareTo(b.RoomIndex));
-
-            var allBinders = FindObjectsByType<CharacterUIAutoBind>(FindObjectsInactive.Include);
-
-            foreach (var combatant in all)
-            {
-                if (combatant.IsEnemy) continue;
-                if (!allyUIMap.TryGetValue(combatant.RoomIndex, out var targetAllyUI)) continue;
-
-                CharacterUIAutoBind match = null;
-                foreach (var b in allBinders)
-                    if (b.GetCharacterBehaviour() == combatant) { match = b; break; }
-                if (match == null) continue;
-
-                // Reparent to the correct AllyUI
-                match.transform.SetParent(targetAllyUI, false);
-                match.gameObject.SetActive(true);
+                var targetAllyUI = allyUIPerRoom[room];
+                ui.transform.SetParent(targetAllyUI, false);
+                ui.gameObject.SetActive(true);
                 targetAllyUI.gameObject.SetActive(true);
             }
 
-            // Hide AllyUI that ended up with no CharacterUIBinder children
-            foreach (var kvp in allyUIMap)
+            foreach (var allyUI in allyUIPerRoom)
             {
-                var ally = kvp.Value;
-                bool hasChild = ally.GetComponentInChildren<CharacterUIBinder>(true) != null;
-                ally.gameObject.SetActive(hasChild);
+                if (allyUI == null) continue;
+                bool show = allyUI.GetComponentInChildren<CharacterUIBinder>(true) != null;
+                allyUI.gameObject.SetActive(show);
             }
         }
     }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,15 +14,14 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
 
         private Button[]    _buttons;
         private Transform[] _dotContainers;
-        private int[]       _combatantRoom; // index = combatantIndex, value = roomIndex
+        private int[]       _combatantRoom;
 
         private void Start()
         {
             var root = mapSection != null ? mapSection : transform;
 
-            // Discover nodes dynamically
-            var buttonList    = new System.Collections.Generic.List<Button>();
-            var containerList = new System.Collections.Generic.List<Transform>();
+            var buttonList    = new List<Button>();
+            var containerList = new List<Transform>();
             int n = 0;
             while (true)
             {
@@ -41,15 +41,10 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
                     _buttons[i].onClick.AddListener(() => roomNavigator?.NavigateTo(captured));
             }
 
-            // Seed combatant positions from the actual Combatant components
-            var allies = FindObjectsByType<Combatant>(FindObjectsInactive.Include);
-            var allyList = new System.Collections.Generic.List<Combatant>();
-            foreach (var c in allies) if (!c.IsEnemy) allyList.Add(c);
-            allyList.Sort((a, b) => a.RoomIndex.CompareTo(b.RoomIndex));
-
-            _combatantRoom = new int[allyList.Count];
-            for (int i = 0; i < allyList.Count; i++)
-                _combatantRoom[i] = allyList[i].RoomIndex;
+            var allies = SceneQueries.FindAllAllies();
+            _combatantRoom = new int[allies.Count];
+            for (int i = 0; i < allies.Count; i++)
+                _combatantRoom[i] = allies[i].RoomIndex;
 
             RefreshDots();
             SetActiveRoom(roomNavigator != null ? roomNavigator.CurrentRoomIndex : 0);

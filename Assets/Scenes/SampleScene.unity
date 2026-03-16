@@ -1724,12 +1724,9 @@ MonoBehaviour:
   _isEnemy: 0
   _roomIndex: 0
   _maxHP: 10
-  _currentHP: 10
   _speed: 5
   _strength: 5
   _defense: 5
-  _power: 5
-  _fillTime: 3
   _runMessage: RUN
 --- !u!1 &619394800
 GameObject:
@@ -4234,12 +4231,9 @@ MonoBehaviour:
   _isEnemy: 0
   _roomIndex: 1
   _maxHP: 10
-  _currentHP: 10
   _speed: 5
   _strength: 5
   _defense: 5
-  _power: 5
-  _fillTime: 3
   _runMessage: RUN
 --- !u!1 &1472693541
 GameObject:
@@ -5727,12 +5721,9 @@ MonoBehaviour:
   _isEnemy: 1
   _roomIndex: 1
   _maxHP: 10
-  _currentHP: 10
   _speed: 4
   _strength: 5
   _defense: 5
-  _power: 5
-  _fillTime: 4
   _runMessage: ENEMY RUN
 --- !u!1 &1851873846
 GameObject:
@@ -6249,12 +6240,9 @@ MonoBehaviour:
   _isEnemy: 1
   _roomIndex: 0
   _maxHP: 10
-  _currentHP: 10
   _speed: 4
   _strength: 5
   _defense: 5
-  _power: 5
-  _fillTime: 4
   _runMessage: ENEMY RUN
 --- !u!1 &1931781701
 GameObject:
