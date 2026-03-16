@@ -38,18 +38,21 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
             }
         }
 
-        public bool TryPlayerAction(PlayerAction action)
+        public bool TryPlayerAction(PlayerAction action) =>
+            TryPlayerAction(action, GetReadyAlly());
+
+        public bool TryPlayerAction(PlayerAction action, Combatant actor)
         {
-            var ready = GetReadyAlly();
-            if (ready == null) return false;
+            if (actor == null || actor.IsEnemy || !actor.IsAlive() || actor.ElapsedTime < actor.FillTime)
+                return false;
 
             var target = GetLivingCombatants(isEnemy: true);
             ICombatCommand cmd = action == PlayerAction.Fight && target.Count > 0
-                ? new AttackCommand(ready, PickRandom(target))
-                : new RunCommand(ready);
+                ? new AttackCommand(actor, PickRandom(target))
+                : new RunCommand(actor);
 
             _commandQueue.Enqueue(cmd);
-            ready.ElapsedTime = 0f;
+            actor.ElapsedTime = 0f;
             return true;
         }
 

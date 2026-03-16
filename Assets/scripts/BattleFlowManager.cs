@@ -47,6 +47,13 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
         public void OnFightButtonPressed() => ActiveRoom?.TryPlayerAction(PlayerAction.Fight);
         public void OnRunButtonPressed()  => ActiveRoom?.TryPlayerAction(PlayerAction.Run);
 
+        public void TriggerActionForCombatant(Combatant combatant, PlayerAction action)
+        {
+            if (combatant == null) return;
+            if (_roomMap != null && _roomMap.TryGetValue(combatant.RoomIndex, out var room))
+                room.TryPlayerAction(action, combatant);
+        }
+
         private RoomBattleManager ActiveRoom =>
             _roomMap != null && _roomMap.TryGetValue(activeRoomIndex, out var r) ? r : null;
     }

@@ -32,7 +32,7 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
             if (_canvasGroup == null) _canvasGroup = gameObject.AddComponent<CanvasGroup>();
             _canvas = GetComponentInParent<Canvas>();
 
-            _battleFlow = FindFirstObjectByType<BattleFlowManager>();
+            _battleFlow = FindAnyObjectByType<BattleFlowManager>();
 
             // Find combatant by index (non-enemy, sorted by RoomIndex)
             var all = FindObjectsByType<Combatant>(FindObjectsInactive.Include);
@@ -114,7 +114,6 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
                 _allyUIPerRoom[targetRoom].gameObject.SetActive(true);
                 _characterUI.SetParent(_allyUIPerRoom[targetRoom], false);
                 _characterUI.gameObject.SetActive(true);
-                RefreshAllyUIStack(_allyUIPerRoom[targetRoom]);
             }
 
             // Move color indicator to target PanelRoom
@@ -130,27 +129,9 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
                 var srcAlly = _allyUIPerRoom[currentRoom];
                 bool hasAlly = srcAlly.GetComponentInChildren<CharacterUIBinder>(true) != null;
                 srcAlly.gameObject.SetActive(hasAlly);
-                if (hasAlly) RefreshAllyUIStack(srcAlly);
             }
 
             roomMapUI?.SetCombatantRoom(combatantIndex, targetRoom);
-        }
-
-        private const float StackOffsetLocalY = -22000f;
-
-        private static void RefreshAllyUIStack(Transform allyUI)
-        {
-            int slot = 0;
-            for (int i = 0; i < allyUI.childCount; i++)
-            {
-                var child = allyUI.GetChild(i);
-                if (!child.gameObject.activeSelf) continue;
-                if (child.GetComponent<CharacterUIBinder>() == null) continue;
-                var lp = child.localPosition;
-                lp.y = slot * StackOffsetLocalY;
-                child.localPosition = lp;
-                slot++;
-            }
         }
 
         private int GetRoomNodeUnderPointer(PointerEventData eventData)
