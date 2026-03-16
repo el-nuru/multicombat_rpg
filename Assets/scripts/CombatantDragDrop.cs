@@ -6,18 +6,15 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
     public class CombatantDragDrop : MonoBehaviour,
         IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        [SerializeField] private int combatantIndex;
-        [SerializeField] private RoomMapUI roomMapUI;
+        [SerializeField] private int       combatantIndex;
         [SerializeField] private Transform mapSection;
 
-        private RectTransform     _rect;
-        private CanvasGroup       _canvasGroup;
-        private Vector2           _originalPos;
-        private Canvas            _canvas;
-        private Combatant         _combatant;
-        private BattleFlowManager _battleFlow;
-        private Transform         _characterUI;
-        private Transform[]       _allyUIPerRoom;
+        private RectTransform _rect;
+        private CanvasGroup   _canvasGroup;
+        private Vector2       _originalPos;
+        private Canvas        _canvas;
+        private Combatant     _combatant;
+        private AgentMover    _agentMover;
 
         private void Awake()
         {
@@ -30,14 +27,8 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
 
         private void Start()
         {
-            _battleFlow = FindAnyObjectByType<BattleFlowManager>();
-
-            _combatant = SceneQueries.FindAllyCombatantByIndex(combatantIndex);
-
-            if (_combatant != null)
-                _characterUI = SceneQueries.FindCharacterUI(_combatant)?.transform;
-
-            _allyUIPerRoom = SceneQueries.FindAllyUIPerRoom(_canvas?.transform);
+            _agentMover = FindAnyObjectByType<AgentMover>();
+            _combatant  = SceneQueries.FindAllyCombatantByIndex(combatantIndex);
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -61,29 +52,9 @@ namespace c1a_proy.rpg.rpg.Assets.scripts
 
             int targetRoom = GetRoomNodeUnderPointer(eventData);
             if (targetRoom < 0 || _combatant == null) return;
+            if (_combatant.RoomIndex == targetRoom) return;
 
-            int currentRoom = _combatant.RoomIndex;
-            if (currentRoom == targetRoom) return;
-
-            _battleFlow?.MoveToRoom(_combatant, targetRoom);
-
-            if (_characterUI != null && _allyUIPerRoom != null &&
-                targetRoom < _allyUIPerRoom.Length && _allyUIPerRoom[targetRoom] != null)
-            {
-                _allyUIPerRoom[targetRoom].gameObject.SetActive(true);
-                _characterUI.SetParent(_allyUIPerRoom[targetRoom], false);
-                _characterUI.gameObject.SetActive(true);
-            }
-
-            if (_allyUIPerRoom != null && currentRoom < _allyUIPerRoom.Length &&
-                _allyUIPerRoom[currentRoom] != null)
-            {
-                var srcAlly = _allyUIPerRoom[currentRoom];
-                srcAlly.gameObject.SetActive(
-                    srcAlly.GetComponentInChildren<CharacterUIBinder>(true) != null);
-            }
-
-            roomMapUI?.SetCombatantRoom(combatantIndex, targetRoom);
+            _agentMover?.MoveTo(_combatant, targetRoom);
         }
 
         private int GetRoomNodeUnderPointer(PointerEventData eventData)
